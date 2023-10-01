@@ -1,5 +1,5 @@
 #include<stdio.h>
-#include<stdlib.h>
+#include<malloc.h>
 struct node{
     int value;
     struct node* next;

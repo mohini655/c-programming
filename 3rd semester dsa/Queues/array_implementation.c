@@ -5,6 +5,7 @@ struct queue{
     int *arr;
     int end;
     int size;
+    int start;
 };
 
 int isfull(struct queue *q){
@@ -17,7 +18,7 @@ int isfull(struct queue *q){
 }
 
 int isempty(struct queue *q){
-    if(q -> end == -1){
+    if(q -> end == q -> start){
         return 1;
     }
     else{
@@ -41,11 +42,8 @@ int dequeue(struct queue *q){
         printf("queue underflaw\n");
     }
     else{
-        val = q -> arr[0];
-        for(int i = 0;i != q -> end;i++){
-            q -> arr[i] = q -> arr[i + 1];
-        }
-        q -> end--;
+        q -> start++;
+        val = q -> arr[q -> start];
     }
     return val;
 }
@@ -54,8 +52,10 @@ void print(struct queue *q){
     if(isempty(q)){
         printf("queue is empty\n");
     }
-    for(int i = 0;i <= q -> end ;i++){
+    int i = q -> start+1;
+    while(i <= q -> end){
         printf("%d  ", q -> arr[i]);
+        i++;
     }printf("\n");
 }
 
@@ -64,6 +64,7 @@ int main(){
     Q.size = 15;
     Q.arr = (int*)malloc(sizeof(int)*Q.size);
     Q.end = -1;
+    Q.start = -1;
 
     if(isempty(&Q)){
         printf("Queue is empty\n");
