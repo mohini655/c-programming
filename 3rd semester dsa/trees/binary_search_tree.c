@@ -63,54 +63,85 @@ void inorder(struct binary * root){
     inorder(root -> right);
 }
 
-void insert(struct binary * root, int data){
-    struct binary* node = create(data);
-    struct binary* prev = NULL;
-    while(root != NULL){
-        prev = root;
-        if(root -> value == data){
-            printf("can't insert bcoz of duplicate data\n");
-            return;
-        }
-        else if(root -> value < data){
-            root = root -> right;
-        }
-        else{
-            root = root -> left;
-        }
+// void insert(struct binary * root, int data){
+//     struct binary* node = create(data);
+//     struct binary* prev = NULL;
+//     while(root != NULL){
+//         prev = root;
+//         if(root -> value == data){
+//             printf("can't insert bcoz of duplicate data\n");
+//             return;
+//         }
+//         else if(root -> value < data){
+//             root = root -> right;
+//         }
+//         else{
+//             root = root -> left;
+//         }
+//     }
+//     if(prev -> value > data){
+//         prev -> left = node;
+//     }
+//     else{
+//         prev -> right = node;
+//     }
+// }
+struct binary * insert(struct binary * root, int data){
+    if(root == NULL){
+        return create(data);
     }
-    if(prev -> value > data){
-        prev -> left = node;
+    if(root -> value < data){
+        root -> right = insert(root -> right, data);
     }
-    else{
-        prev -> right = node;
-    }
-}
-
-struct binary* inpre(struct binary * root){
-    root = root -> left;
-    while(root -> right != NULL){
-        root = root -> right;
+    else if(root -> value > data){
+        root -> left = insert(root -> left, data);
     }
     return root;
 }
 
+int inpre(struct binary * root){
+    root = root -> left;
+    while(root -> right != NULL){
+        root = root -> right;
+    }
+    return root -> value;
+}
+
+int inpost(struct binary * root){
+    root = root -> right;
+    while(root -> left != NULL){
+        root = root -> left;
+    }
+    return root -> value;
+}
+
 struct binary * delete(struct binary * root , int val){
-    struct binary * prev = NULL;
     if(root == NULL){
         return NULL;
     }
     if(root -> value > val){
-        return delete(root-> left, val);
+        root -> left = delete(root-> left, val);
     }
     else if(root -> value < val){
-        return delete(root-> right , val);
+        root -> right = delete(root-> right , val);
     }
     else{
         if(root -> left == NULL && root-> right == NULL){
             free(root);
+            return NULL;
         }
-
+        else if(root -> left == NULL){
+            return root -> right ;
+            free(root);
+        }
+        else if(root -> right == NULL){
+            return root -> left;
+            free(root);
+        }
+        else{
+            root -> value = inpre(root);
+            delete(root -> left, root -> value);
+        }
     }
     return root;
     
@@ -152,6 +183,8 @@ int main(){
     insert(root, 12);
     insert(root, 13);
     insert(root, 16);
+    insert(root, 1);
+    printf("here - \n");
     inorder(root);printf("\n");
 
     int key = 15;
@@ -162,14 +195,18 @@ int main(){
         printf("key %d is not present in the tree \n", key);
     }
 
-    delete(root,4);
-    inorder(root);printf("\n");
-    delete(root,16);
-    inorder(root);printf("\n");
+    
     delete(root,10);
     inorder(root);printf("\n");
-    delete(root,13);
+    delete(root,9);
     inorder(root);printf("\n");
-    delete(root,7);
+    delete(root, 7);
     inorder(root);printf("\n");
+    delete(root, 5);
+    inorder(root);printf("\n");
+    delete(root, 15);
+    inorder(root);printf("\n");
+    delete(root, 11);
+    inorder(root);printf("\n");
+    
 }

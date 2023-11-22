@@ -49,6 +49,31 @@ void deleteatindex(struct node** head, struct node** tail, int n){
     free(temp);
     
 }
+
+void deletw_value(struct node** head, struct node** tail, int val){
+    struct node* prev = NULL;
+    struct node* curr = *head;
+    while(curr != NULL && curr -> value != val){
+        prev = curr;
+        curr = curr -> next;
+    }
+    if(curr == NULL){
+        printf("this element not exist\n");
+        return;
+    }
+    if(prev == NULL){
+        (*head) = curr -> next;
+    }
+    else if(curr -> next == NULL){
+        (*tail) = prev;
+        prev ->next = curr -> next;
+    }
+    else{
+        prev ->next = curr -> next;
+    }
+    free(curr);
+}
+
 int main(){
     struct node* head, *tail;
     head = (struct node* )malloc(sizeof(struct node));
@@ -69,7 +94,11 @@ int main(){
     printf("%d\n", tail-> value);
     tail = head;
     printf("%d\n", tail-> value);
-
+    deletw_value(&head, &tail, 3);
+    print(head);
+    deletw_value(&head, &tail, 6);
+    print(head);
+    printf("%d\n", tail-> value);
 
 
 }
